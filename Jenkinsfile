@@ -2,44 +2,26 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                git 'https://github.com/your-repo/react-app.git'
+                git branch: 'main', 
+                    credentialsId: 'id_ed25519.pub', 
+                    url: 'git@github.com:subramaniravi/node-2.git'
             }
         }
-
-        stage('Install Dependencies') {
+        
+        stage('Build') {
             steps {
                 sh 'npm install'
             }
         }
 
-        stage('Build React App') {
+        stage('Test') {
             steps {
-                sh 'npm run build'
+                sh 'npm test'
             }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t react-app:latest .'
-            }
-        }
-
-        stage('Run Docker Container') {
-            steps {
-                sh 'docker run -d --name react-container -p 3000:3000 react-app:latest'
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'Pipeline executed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
         }
     }
 }
+
 
