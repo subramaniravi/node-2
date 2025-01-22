@@ -1,15 +1,28 @@
 pipeline {
     agent any
-    environment {
-        GIT_SSH_KEY = credentials('id_ed25519.pub')
-    }
+
     stages {
         stage('Checkout') {
             steps {
-                git url: 'git@github.com:subramaniravi/node-2.git', credentialsId: 'id_ed25519.pub'
+                git branch: 'main', 
+                    credentialsId: 'id_ed25519.pub', 
+                    url: 'git@github.com:subramaniravi/node-2.git'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'npm test'
             }
         }
     }
 }
+
 
 
