@@ -1,28 +1,20 @@
 pipeline {
     agent any
-
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', 
-                    credentialsId: 'id_ed25519.pub', 
-                    url: 'git@github.com:subramaniravi/node-2.git'
-            }
-        }
-        
         stage('Build') {
             steps {
                 sh 'npm install'
             }
         }
-
-        stage('Test') {
+        
+        stage('Deliver') { 
             steps {
-                sh 'npm test'
+                sh './jenkins/scripts/deliver.sh' 
+                input message: 'Finished using the web site? (Click "Proceed" to continue)' 
+                sh './jenkins/scripts/kill.sh' 
             }
         }
     }
 }
-
 
 
